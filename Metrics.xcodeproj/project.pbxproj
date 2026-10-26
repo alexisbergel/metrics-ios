@@ -27,7 +27,6 @@
 		5EB7A50228451BE600377801 /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB7A50128451BE600377801 /* Header.swift */; };
 		5ECEE112307C08F2009556CF /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ECEE111307C08F2009556CF /* DateHelper.swift */; };
 		5EE23E892905A25F00113824 /* dataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE23E882905A25F00113824 /* dataManager.swift */; };
-		5EE63B9D28D315BD004FC1A3 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE63B9C28D315BD004FC1A3 /* TagsViewController.swift */; };
 		5EF3BA0F2917137000C5A93C /* TagItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3BA0E2917137000C5A93C /* TagItem.swift */; };
 		5EF3BA132917139B00C5A93C /* TagItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EF3BA122917139B00C5A93C /* TagItem.xib */; };
 /* End PBXBuildFile section */
@@ -55,7 +54,6 @@
 		5EB7A50128451BE600377801 /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
 		5ECEE111307C08F2009556CF /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		5EE23E882905A25F00113824 /* dataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dataManager.swift; sourceTree = "<group>"; };
-		5EE63B9C28D315BD004FC1A3 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		5EF3BA0E2917137000C5A93C /* TagItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TagItem.swift; path = Metrics/Cells/TagItem.swift; sourceTree = SOURCE_ROOT; };
 		5EF3BA122917139B00C5A93C /* TagItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagItem.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -150,7 +148,6 @@
 			children = (
 				5E5B355B28428FC200D94F61 /* ViewController.swift */,
 				5E2F4E05284BD251009FA9C1 /* NewTransactionController.swift */,
-				5EE63B9C28D315BD004FC1A3 /* TagsViewController.swift */,
 				5E7BB44B2946871800E8CABD /* MonthPickerController.swift */,
 			);
 			path = "View Controllers";
@@ -254,7 +251,6 @@
 				5E2F4E06284BD251009FA9C1 /* NewTransactionController.swift in Sources */,
 				5E054F3B28FDF323005624C2 /* GenericCell.swift in Sources */,
 				5EB7A50228451BE600377801 /* Header.swift in Sources */,
-				5EE63B9D28D315BD004FC1A3 /* TagsViewController.swift in Sources */,
 				5E1874153075942A00DEABDA /* CurrencyFormatter.swift in Sources */,
 				5E5B355A28428FC200D94F61 /* SceneDelegate.swift in Sources */,
 			);

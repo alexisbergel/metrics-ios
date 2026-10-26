@@ -36,19 +36,16 @@ final class dataManager {
     }
 
     @discardableResult
-    func addTag(name: String, limitInCents: Int64) throws -> Tag {
+    func addTag(name: String) throws -> Tag {
         let newTag = Tag(context: context)
         newTag.name = name
-        newTag.limitInCents = limitInCents
 
         try saveTagsAndRefreshCache()
         return newTag
     }
 
-    func updateTag(_ tag: Tag, name: String, limitInCents: Int64) throws {
+    func updateTag(_ tag: Tag, name: String) throws {
         tag.name = name
-        tag.limitInCents = limitInCents
-
         try saveTagsAndRefreshCache()
     }
 

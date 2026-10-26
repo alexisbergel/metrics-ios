@@ -17,7 +17,7 @@ enum ButtonItemTag: Int {
     case deposit
 }
 
-class NewTransactionController: UIViewController, UITextFieldDelegate, TagsViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+class NewTransactionController: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var header: Header!
     @IBOutlet weak var amount: UITextField!
@@ -28,7 +28,6 @@ class NewTransactionController: UIViewController, UITextFieldDelegate, TagsViewC
     weak var delegate: NewTransactionControllerDelegate?
     var managedObjectContext: NSManagedObjectContext = UIViewController.sharedViewContext()
     var currentDate: Date = Date()
-    var selectedTag: Tag?
 
     private var amountInCents: Int64 = 0 {
         didSet {
@@ -120,7 +119,6 @@ class NewTransactionController: UIViewController, UITextFieldDelegate, TagsViewC
         newTransaction.amountInCents = amountInCents
         newTransaction.name = label.text
         newTransaction.id = UUID()
-        newTransaction.tag = selectedTag
         
         return newTransaction
     }
@@ -212,32 +210,8 @@ class NewTransactionController: UIViewController, UITextFieldDelegate, TagsViewC
         amountInCents = newAmount
         return false
     }
-    
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+
         
-        if textField == tag {
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let tagViewController = storyboard.instantiateViewController(withIdentifier: "TagsViewController") as! TagsViewController
-            tagViewController.delegate = self
-            self.present(tagViewController, animated: true)
-            
-            return false
-        }
-        
-        return true
-    }
-    
-    
-    
-    // MARK: - TagsViewController Delegate
-    
-    func userSelectedTag(selectedTag: Tag) {
-        
-        self.selectedTag = selectedTag
-        self.tag.text = selectedTag.name
-    }
-    
     
     // MARK: - UIPopoverPresentationStyle Delegate
     

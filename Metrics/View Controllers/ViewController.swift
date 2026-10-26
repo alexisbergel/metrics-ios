@@ -264,25 +264,7 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TransactionCell", for: indexPath) as! TransactionCell
             cell.nameLabel.text = transaction.name
             cell.tagLabel.text = (transaction.tag == nil) ? "Autre" : transaction.tag!.name
-            
-            if transaction.tag != nil && transaction.tag!.limitInCents > 0 {
-                
-                let amountString = CurrencyFormatter.string(from: transaction.amountInCents)
-                let limitString = " / \(CurrencyFormatter.string(from: transaction.tag!.limitInCents))"
-                
-                let limitAttribute = [NSAttributedString.Key.foregroundColor : UIColor.gray]
-                
-                let attrString1 = NSMutableAttributedString(string: amountString)
-                let attrString2 = NSMutableAttributedString(string: limitString, attributes: limitAttribute)
-                attrString1.append(attrString2)
-                
-                cell.amountLabel.attributedText = attrString1
-                
-            } else {
-                
-                cell.amountLabel.text = CurrencyFormatter.string(from: transaction.amountInCents)
-            }
-            
+            cell.amountLabel.text = CurrencyFormatter.string(from: transaction.amountInCents)
             cell.executed = transaction.executed
             
             return cell
