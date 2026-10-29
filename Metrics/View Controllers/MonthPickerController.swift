@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CoreData
 
 protocol MonthPickerControllerDelegate:AnyObject {
     func userChangedSelectedMonth(selectedKeyMonth:Int32)
@@ -48,27 +47,16 @@ class MonthPickerController: UIViewController, UITableViewDelegate, UITableViewD
 
     /// Récupère le `monthKey` pour chaque mois contenant au moins une transaction + celui du mois en cours
     private func loadMonths() {
-
-        let fetchRequest = NSFetchRequest<NSDictionary>(entityName: "Transaction")
-        fetchRequest.resultType = .dictionaryResultType
-        fetchRequest.propertiesToFetch = ["dayKey"]
-        fetchRequest.returnsDistinctResults = true
         
         // Ajouter le mois en cours, même si aucune transaction n'est créée
-        let currentMonthKey = DateHelper.monthKey()
-        var monthKeys: Set<Int32> = [currentMonthKey]
-
-        // Ajouter le monthKey pour chaque mois où au moins une transaction est créée
+        var monthKeys: Set<Int32> = [DateHelper.monthKey()]
+        
         do {
-            for result in try context.fetch(fetchRequest) {
-                if let dayKey = (result["dayKey"] as? NSNumber)?.int32Value {
-                    monthKeys.insert(dayKey / 100)
-                }
-            }
-        } catch let error as NSError {
-            print("Could not fetch months. \(error), \(error.userInfo)")
+            monthKeys.formUnion(try DataManager.sharedInstance.monthKeys())
+        } catch {
+            presentError(error, title: "Impossible de charger les mois")
         }
-
+        
         months = monthKeys.sorted(by: >)
     }
 

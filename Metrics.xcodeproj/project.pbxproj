@@ -11,7 +11,6 @@
 		5E054F3B28FDF323005624C2 /* GenericCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E054F3A28FDF323005624C2 /* GenericCell.swift */; };
 		5E070AC6286302550081B805 /* TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E070AC5286302550081B805 /* TransactionCell.xib */; };
 		5E070AC8286302780081B805 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E070AC7286302780081B805 /* TransactionCell.swift */; };
-		5E0AD65A285A7B6C002FF873 /* UIViewController+Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0AD659285A7B6C002FF873 /* UIViewController+Context.swift */; };
 		5E1874153075942A00DEABDA /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1874143075942A00DEABDA /* CurrencyFormatter.swift */; };
 		5E2F4E06284BD251009FA9C1 /* NewTransactionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2F4E05284BD251009FA9C1 /* NewTransactionController.swift */; };
 		5E381A612847F4E0004A07A8 /* MainButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E381A602847F4E0004A07A8 /* MainButton.swift */; };
@@ -23,10 +22,11 @@
 		5E5B356428428FC300D94F61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E5B356228428FC300D94F61 /* LaunchScreen.storyboard */; };
 		5E794D55286CDB3800399D5E /* Metrics.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 5E794D54286CDB3800399D5E /* Metrics.xcdatamodel */; };
 		5E7BB44C2946871800E8CABD /* MonthPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7BB44B2946871800E8CABD /* MonthPickerController.swift */; };
+		5E7F0A0230A1B2C300D4E5F6 /* UIViewController+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7F0A0130A1B2C300D4E5F6 /* UIViewController+Error.swift */; };
 		5EB7A50028451BB300377801 /* Header.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EB7A4FF28451BB300377801 /* Header.xib */; };
 		5EB7A50228451BE600377801 /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB7A50128451BE600377801 /* Header.swift */; };
 		5ECEE112307C08F2009556CF /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ECEE111307C08F2009556CF /* DateHelper.swift */; };
-		5EE23E892905A25F00113824 /* dataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE23E882905A25F00113824 /* dataManager.swift */; };
+		5EE23E892905A25F00113824 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE23E882905A25F00113824 /* DataManager.swift */; };
 		5EF3BA0F2917137000C5A93C /* TagItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF3BA0E2917137000C5A93C /* TagItem.swift */; };
 		5EF3BA132917139B00C5A93C /* TagItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EF3BA122917139B00C5A93C /* TagItem.xib */; };
 /* End PBXBuildFile section */
@@ -36,7 +36,6 @@
 		5E054F3A28FDF323005624C2 /* GenericCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericCell.swift; sourceTree = "<group>"; };
 		5E070AC5286302550081B805 /* TransactionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TransactionCell.xib; sourceTree = "<group>"; };
 		5E070AC7286302780081B805 /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
-		5E0AD659285A7B6C002FF873 /* UIViewController+Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Context.swift"; sourceTree = "<group>"; };
 		5E1874143075942A00DEABDA /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		5E2F4E05284BD251009FA9C1 /* NewTransactionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTransactionController.swift; sourceTree = "<group>"; };
 		5E381A602847F4E0004A07A8 /* MainButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainButton.swift; path = Metrics/Elements/MainButton.swift; sourceTree = SOURCE_ROOT; };
@@ -50,10 +49,11 @@
 		5E5B356528428FC300D94F61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5E794D54286CDB3800399D5E /* Metrics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; name = Metrics.xcdatamodel; path = Metrics.xcdatamodeld/Metrics.xcdatamodel; sourceTree = "<group>"; };
 		5E7BB44B2946871800E8CABD /* MonthPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthPickerController.swift; sourceTree = "<group>"; };
+		5E7F0A0130A1B2C300D4E5F6 /* UIViewController+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Error.swift"; sourceTree = "<group>"; };
 		5EB7A4FF28451BB300377801 /* Header.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Header.xib; sourceTree = "<group>"; };
 		5EB7A50128451BE600377801 /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
 		5ECEE111307C08F2009556CF /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
-		5EE23E882905A25F00113824 /* dataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dataManager.swift; sourceTree = "<group>"; };
+		5EE23E882905A25F00113824 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		5EF3BA0E2917137000C5A93C /* TagItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TagItem.swift; path = Metrics/Cells/TagItem.swift; sourceTree = SOURCE_ROOT; };
 		5EF3BA122917139B00C5A93C /* TagItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TagItem.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,7 +85,7 @@
 		5E0AD65B285A7C04002FF873 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				5E0AD659285A7B6C002FF873 /* UIViewController+Context.swift */,
+				5E7F0A0130A1B2C300D4E5F6 /* UIViewController+Error.swift */,
 				5E1874143075942A00DEABDA /* CurrencyFormatter.swift */,
 				5ECEE111307C08F2009556CF /* DateHelper.swift */,
 			);
@@ -119,7 +119,7 @@
 				5EB7A4FE28451A0400377801 /* Elements */,
 				5EB7A4FC2845198100377801 /* Storyboard & Launch Screen */,
 				5EB7A4FB2845196500377801 /* Other */,
-				5EE23E882905A25F00113824 /* dataManager.swift */,
+				5EE23E882905A25F00113824 /* DataManager.swift */,
 				5E5B356528428FC300D94F61 /* Info.plist */,
 				5E794D54286CDB3800399D5E /* Metrics.xcdatamodel */,
 			);
@@ -243,9 +243,9 @@
 				5E7BB44C2946871800E8CABD /* MonthPickerController.swift in Sources */,
 				5ECEE112307C08F2009556CF /* DateHelper.swift in Sources */,
 				5E794D55286CDB3800399D5E /* Metrics.xcdatamodel in Sources */,
-				5E0AD65A285A7B6C002FF873 /* UIViewController+Context.swift in Sources */,
+				5E7F0A0230A1B2C300D4E5F6 /* UIViewController+Error.swift in Sources */,
 				5E381A612847F4E0004A07A8 /* MainButton.swift in Sources */,
-				5EE23E892905A25F00113824 /* dataManager.swift in Sources */,
+				5EE23E892905A25F00113824 /* DataManager.swift in Sources */,
 				5E5B355828428FC200D94F61 /* AppDelegate.swift in Sources */,
 				5E070AC8286302780081B805 /* TransactionCell.swift in Sources */,
 				5E2F4E06284BD251009FA9C1 /* NewTransactionController.swift in Sources */,

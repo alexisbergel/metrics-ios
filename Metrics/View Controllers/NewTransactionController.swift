@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CoreData
 
 protocol NewTransactionControllerDelegate: AnyObject {
     func userFinishedEditing(newTransaction: Transaction)
@@ -26,7 +25,6 @@ class NewTransactionController: UIViewController, UITextFieldDelegate, UIPopover
     @IBOutlet weak var tag: UITextField!
     
     weak var delegate: NewTransactionControllerDelegate?
-    var managedObjectContext: NSManagedObjectContext = UIViewController.sharedViewContext()
     var currentDate: Date = Date()
 
     private var amountInCents: Int64 = 0 {
@@ -90,46 +88,29 @@ class NewTransactionController: UIViewController, UITextFieldDelegate, UIPopover
     
     @objc private func finishEditing(sender: UIBarButtonItem) {
         
+        // Évite d'afficher une erreur pour un montant vide (la règle est vérifiée par DataManager)
         guard amountInCents != 0 else {
             return
         }
         
-        // dayKey
-        guard let dayKeyInt = Int32(DateHelper.dayKeyFormatter.string(from: currentDate)) else {
-            return
-        }
-        
         let signedAmountInCents = signedAmountInCents(for: sender.tag)
-        let newTransaction = makeTransaction(amountInCents: signedAmountInCents, dayKeyInt: dayKeyInt)
-        persistChanges()
-
-        self.dismiss(animated: true)
-        self.delegate?.userFinishedEditing(newTransaction: newTransaction)
+        
+        do {
+            let newTransaction = try DataManager.sharedInstance.addTransaction(
+                amountInCents: signedAmountInCents,
+                date: currentDate,
+                name: label.text,
+                tag: nil)
+            
+            dismiss(animated: true)
+            delegate?.userFinishedEditing(newTransaction: newTransaction)
+        } catch {
+            presentError(error, title: "Impossible de créer la transaction")
+        }
     }
 
     private func signedAmountInCents(for buttonTag: Int) -> Int64 {
         buttonTag == ButtonItemTag.withdraw.rawValue ? -amountInCents : amountInCents
-    }
-
-    private func makeTransaction(amountInCents: Int64, dayKeyInt: Int32) -> Transaction {
-        
-        let newTransaction = Transaction(context: self.managedObjectContext)
-        newTransaction.createdAt = Date()
-        newTransaction.dayKey = dayKeyInt
-        newTransaction.amountInCents = amountInCents
-        newTransaction.name = label.text
-        newTransaction.id = UUID()
-        
-        return newTransaction
-    }
-
-    private func persistChanges() {
-        guard managedObjectContext.hasChanges else { return }
-        do {
-            try managedObjectContext.save()
-        } catch {
-            fatalError("Unresolved error \(error)")
-        }
     }
     
     @objc private func showDatePicker() {

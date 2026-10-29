@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CoreData
 
 class ViewController: UIViewController, NewTransactionControllerDelegate, MonthPickerControllerDelegate,UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -15,7 +14,7 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
     @IBOutlet weak var monthPickerButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
         
-    private var transactions: [NSManagedObject] = []
+    private var transactions: [Transaction] = []
     
     private var tagsAmountsInCents: [String: Int64] = [:]
 
@@ -34,17 +33,14 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        // Set Current Month Key
-        let calendar = Calendar.current
-        let currentComponents = calendar.dateComponents([.year, .month], from: Date())
-        currentMonthKey = Int32(currentComponents.year! * 100 + currentComponents.month!)
+        currentMonthKey = DateHelper.monthKey()
         
         NotificationCenter.default.addObserver(self, selector: #selector(tagsDidChange),
-                                                 name: dataManager.tagsDidChangeNotification, object: nil)
+                                                 name: DataManager.tagsDidChangeNotification, object: nil)
 
-        // Soldes : recalculés après chaque sauvegarde
+        // Soldes : recalculés après chaque modification des transactions
         NotificationCenter.default.addObserver(self, selector: #selector(calculateAmounts),
-                                                 name: .NSManagedObjectContextDidSave, object: context)
+                                               name: DataManager.transactionsDidChangeNotification, object: nil)
 
         mainButton.addTarget(self, action: #selector(newTransaction), for: .touchUpInside)
         monthPickerButton.addTarget(self, action: #selector(openMonthPickerView), for: .touchUpInside)
@@ -64,82 +60,35 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
         executeGesture.numberOfTapsRequired = 2
         collectionView.addGestureRecognizer(executeGesture)
         
-        let deleteGesture = UILongPressGestureRecognizer(target: self, action: #selector(deleteGesture(tapGestureRecognizer:)))
+        let deleteGesture = UILongPressGestureRecognizer(target: self, action: #selector(deleteGesture(longPressGestureRecognizer:)))
         deleteGesture.minimumPressDuration = 1
         collectionView.addGestureRecognizer(deleteGesture)
     }
 
-    /// Load Transactions for `currentMonthKey`
+    /// Charge les transactions de `currentMonthKey`.
     private func loadTransactions() {
-
-        let nextMonthKey = DateHelper.nextMonthKey(after: currentMonthKey)
-
-        let startDayKey = currentMonthKey * 100 + 1
-        let endDayKeyExclusive = nextMonthKey * 100 + 1
-
-        let predicate = NSPredicate(
-            format: "dayKey >= %@ AND dayKey < %@",
-            argumentArray: [NSNumber(value: startDayKey), NSNumber(value: endDayKeyExclusive)]
-        )
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Transaction")
-        let sortByDay = NSSortDescriptor(key: #keyPath(Transaction.dayKey), ascending: false)
-        let sortByCreation = NSSortDescriptor(key: #keyPath(Transaction.createdAt), ascending: false)
-        fetchRequest.sortDescriptors = [sortByDay, sortByCreation]
-        fetchRequest.predicate = predicate
-
+        
         do {
-            transactions = try context.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
+            transactions = try DataManager.sharedInstance.transactions(forMonth: currentMonthKey)
+        } catch {
+            transactions = []
+            presentError(error, title: "Impossible de charger les transactions")
         }
     }
     
     
-    /// Recalcule les soldes depuis la base (seule source de vérité), jusqu'à la fin du mois affiché (`currentMonthKey`) :
-    /// - solde actuel : transactions exécutées
-    /// - solde prévisionnel : toutes les transactions
-    /// Une seule requête agrégée groupée par `executed` : SQLite fait la somme, aucun objet n'est chargé.
-    /// La requête lit la base et pas le contexte : à appeler après `save()`.
+    /// Affiche les soldes jusqu'à la fin du mois affiché (`currentMonthKey`) :
+    /// - titre : solde prévisionnel (toutes les transactions)
+    /// - sous-titre : solde actuel (transactions exécutées)
     @objc private func calculateAmounts() {
 
-        // Borne exclue : 1er jour du mois suivant le mois affiché
-        let nextMonthKey = DateHelper.nextMonthKey(after: currentMonthKey)
-        let endDayKeyExclusive = nextMonthKey * 100 + 1
-
-        let sumExpression = NSExpressionDescription()
-        sumExpression.name = "totalInCents"
-        sumExpression.expression = NSExpression(forFunction: "sum:",
-                                                arguments: [NSExpression(forKeyPath: #keyPath(Transaction.amountInCents))])
-        sumExpression.expressionResultType = .integer64AttributeType
-
-        let fetchRequest = NSFetchRequest<NSDictionary>(entityName: "Transaction")
-        fetchRequest.resultType = .dictionaryResultType
-        fetchRequest.predicate = NSPredicate(format: "dayKey < %@",
-                                             argumentArray: [NSNumber(value: endDayKeyExclusive)])
-        fetchRequest.propertiesToFetch = [#keyPath(Transaction.executed), sumExpression]
-        fetchRequest.propertiesToGroupBy = [#keyPath(Transaction.executed)]
-
-        var executedInCents: Int64 = 0
-        var pendingInCents: Int64 = 0
-
         do {
-            // Au plus 2 lignes : executed = true / executed = false
-            for row in try context.fetch(fetchRequest) {
-                let totalInCents = (row["totalInCents"] as? NSNumber)?.int64Value ?? 0
-
-                if (row[#keyPath(Transaction.executed)] as? NSNumber)?.boolValue == true {
-                    executedInCents += totalInCents
-                } else {
-                    pendingInCents += totalInCents
-                }
-            }
-        } catch let error as NSError {
-            print("Could not calculate amounts. \(error), \(error.userInfo)")
-            return
+            let balances = try DataManager.sharedInstance.balances(upToMonth: currentMonthKey)
+            header.title = CurrencyFormatter.string(from: balances.forecastInCents)
+            header.subtitle = CurrencyFormatter.string(from: balances.executedInCents)
+        } catch {
+            presentError(error, title: "Impossible de calculer les soldes")
         }
-
-        header.title = CurrencyFormatter.string(from: executedInCents + pendingInCents)
-        header.subtitle = CurrencyFormatter.string(from: executedInCents)
     }
 
 
@@ -228,7 +177,7 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
         switch section {
             
             case 0:
-                return dataManager.sharedInstance.tags.count
+                return DataManager.sharedInstance.tags.count
             
             case 1:
                 return transactions.count
@@ -244,7 +193,7 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
         // Tags
         if indexPath.section == 0 {
             
-            let tag = dataManager.sharedInstance.tags[indexPath.row]
+            let tag = DataManager.sharedInstance.tags[indexPath.row]
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TagItem", for: indexPath) as! TagItem
         
@@ -259,11 +208,11 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
         // Transactions
         } else {
             
-            let transaction = transactions[indexPath.row] as! Transaction
+            let transaction = transactions[indexPath.row]
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TransactionCell", for: indexPath) as! TransactionCell
             cell.nameLabel.text = transaction.name
-            cell.tagLabel.text = (transaction.tag == nil) ? "Autre" : transaction.tag!.name
+            cell.tagLabel.text = transaction.tag?.name ?? "Autre"
             cell.amountLabel.text = CurrencyFormatter.string(from: transaction.amountInCents)
             cell.executed = transaction.executed
             
@@ -289,37 +238,45 @@ class ViewController: UIViewController, NewTransactionControllerDelegate, MonthP
     }
     
     
-    @objc private func executeGesture(tapGestureRecognizer:UITapGestureRecognizer) {
+    @objc private func executeGesture(tapGestureRecognizer: UITapGestureRecognizer) {
         
         let point = tapGestureRecognizer.location(in: collectionView)
         guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
         
         if indexPath.section != 1 { return }
         
-        let transaction = transactions[indexPath.row] as! Transaction
-        transaction.executed = transaction.executed ? false : true
+        let transaction = transactions[indexPath.row]
         
-        let cell = collectionView.cellForItem(at: indexPath) as! TransactionCell
-        cell.executed = transaction.executed
-        
-        saveContext()
+        do {
+            try DataManager.sharedInstance.toggleExecuted(transaction)
+            
+            if let cell = collectionView.cellForItem(at: indexPath) as? TransactionCell {
+                cell.executed = transaction.executed
+            }
+        } catch {
+            presentError(error, title: "Impossible de modifier la transaction")
+        }
     }
     
     
-    @objc private func deleteGesture(tapGestureRecognizer:UITapGestureRecognizer) {
+    @objc private func deleteGesture(longPressGestureRecognizer: UILongPressGestureRecognizer) {
         
-        if tapGestureRecognizer.state == .ended {
-            let point = tapGestureRecognizer.location(in: collectionView)
+        if longPressGestureRecognizer.state == .ended {
+            let point = longPressGestureRecognizer.location(in: collectionView)
             guard let indexPath = collectionView.indexPathForItem(at: point) else { return }
             
             if indexPath.section != 1 { return }
             
             let transaction = transactions[indexPath.row]
             
-            self.context.delete(transaction)
-            saveContext()
-            transactions.remove(at: indexPath.row)
-            collectionView.deleteItems(at: [indexPath])
+            do {
+                try DataManager.sharedInstance.deleteTransaction(transaction)
+                
+                transactions.remove(at: indexPath.row)
+                collectionView.deleteItems(at: [indexPath])
+            } catch {
+                presentError(error, title: "Impossible de supprimer la transaction")
+            }
         }
     }
     
