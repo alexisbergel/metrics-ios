@@ -13,8 +13,8 @@ protocol MonthPickerControllerDelegate:AnyObject {
 
 /// Écran de sélection du mois à afficher.
 ///
-/// - Charge depuis CoreData la liste des `monthKey` (format "yyyyMM"),
-///   dérivée des `dayKey` existants, dédupliquée et triée du plus récent au plus ancien.
+/// - Récupère via `DataManager` les `monthKey` (format yyyyMM) contenant au moins une transaction,
+///   plus le mois en cours, triés du plus récent au plus ancien.
 /// - Chaque cellule affiche le mois formaté via `DateHelper` (ex. "Octobre 2026").
 /// - Au choix d'un mois, renvoie le `selectedMonthKey` à son delegate pour qu'il mette à jour son contenu.
 class MonthPickerController: UIViewController, UITableViewDelegate, UITableViewDataSource {

@@ -16,6 +16,14 @@ enum ButtonItemTag: Int {
     case deposit
 }
 
+/// Écran de saisie d'une nouvelle transaction, présenté depuis `ViewController`.
+///
+/// - Saisie du montant au clavier numérique, chiffre par chiffre, en centimes (`amountInCents`).
+/// - Les boutons "-" et "+" de la barre d'outils valident la saisie en retrait ou en dépôt.
+/// - La date se choisit dans un popover (`UIDatePicker`), "Aujourd'hui" par défaut.
+/// - Délègue la création à `DataManager`, puis renvoie la transaction créée à son delegate.
+///
+/// - Note: le champ Tag est affiché mais pas encore relié : la transaction est créée sans tag.
 class NewTransactionController: UIViewController, UITextFieldDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var header: Header!

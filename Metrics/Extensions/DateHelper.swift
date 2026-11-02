@@ -5,6 +5,14 @@
 
 import Foundation
 
+/// Point d'entrée unique pour convertir et afficher les dates de l'app.
+///
+/// - Produit les clés stockées en base : `dayKey` (yyyyMMdd) et clé de mois (yyyyMM).
+/// - Calcule les clés voisines (ex. mois suivant) pour borner les requêtes par mois.
+/// - Formate les mois pour l'affichage (ex. "Octobre 2026").
+///
+/// - Note: locale `fr_FR` et calendrier grégorien, quels que soient les réglages de l'appareil.
+///   Déclaré en `enum` sans `case` : il ne peut pas être instancié.
 enum DateHelper {
 
     /// Permets d'obtenir une date au format yyyyMMdd pour stocker le dayKey dans la BDD (ex: 20261031)

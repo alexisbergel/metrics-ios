@@ -19,6 +19,16 @@ enum DataManagerError: LocalizedError {
     }
 }
 
+/// Couche d'accès aux données et des règles métier de l'app.
+///
+/// - Seul propriétaire du `NSPersistentContainer` : tout fetch et toute sauvegarde passent par
+///   `DataManager.sharedInstance`, jamais par les contrôleurs.
+/// - Crée et valide les transactions et les tags, et calcule les soldes par mois.
+/// - Garde en cache la liste des `tags`, triée par nom.
+/// - Prévient des changements par `tagsDidChangeNotification` et `transactionsDidChangeNotification`.
+///
+/// - Important: chaque modification est sauvegardée immédiatement. En cas d'échec, `save()`
+///   annule **toutes** les modifications non sauvegardées du contexte, puis relance l'erreur.
 final class DataManager {
 
     static let sharedInstance = DataManager()
